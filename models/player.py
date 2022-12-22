@@ -2,53 +2,50 @@ from tinydb import TinyDB
 
 from dataclasses import dataclass
 
-from controllers.user_manager import ControllerUser
+from controllers.user_manager import ControllerPlayer
 
 MAX_PLAYERS_NUMBER = 3
 
-data_players = TinyDB('data_players.json', indent=4)
 
 @dataclass
 class Player:
     last_name :str
     first_name :str
     birthday :str
-    sexe :str
+    genre :str
     rank :str
-    score :str
+    # score :str
 
+        
 
-    def create_players():
-        user = ControllerUser.input_controller_user()
-        player = {
-                "last_name": user.last_name,
-                "first_name": user.first_name,
-                "birthday": user.birthday,
-                "sexe": user.sexe,
-                "rank": user.rank,
-            }
-        data_players.insert(player)    
+    def create_player():
+        input_player = ControllerPlayer.input_controller_player()
+        return input_player
+        
+    def save_player_in_db():
+        data_players = TinyDB('data_players.json', indent=4)
+        player = Player.create_player()
+        last_name = player[0]
+        first_name = player[1]
+        birthday = player[2]
+        genre = player[3]
+        rank = player[4]
 
-        return user
-
-    # def save_player(self):
-    #     data_players.insert(
-    #         {
-    #             "last_name": self.last_name,
-    #             "first_name": self.first_name,
-    #             "birthday": self.birthday,
-    #             "sexe": self.sexe,
-    #             "rank": self.rank,
-    #         }
-    #     )
-
+        serialized_player = {
+            "last_name": last_name,
+            "first_name": first_name,
+            "birthday": birthday,
+            "genre": genre,
+            "rank": rank,
+        }
+        data_players.insert(serialized_player)
 
     def create_list_players():
         list_players = []
         for _ in range(MAX_PLAYERS_NUMBER):
-            player = Player.create_players()
+            player = Player.save_player_in_db()
             list_players.append(player)
-            print(list_players)
+            return list_players
 
 
 
