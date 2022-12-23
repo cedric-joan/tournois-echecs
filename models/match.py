@@ -1,17 +1,21 @@
-from dataclasses import dataclass
-import player
+# from dataclasses import dataclass
 
-players = player.Player.new_players
+from tinydb import TinyDB
+data_base = TinyDB('data_base.json', indent=4)
+player_db = data_base.table("player")
 
-@dataclass
-class Match():
-       
-    def get_pair_players():
-       list_players =  []
-       for player in players:
-        list_players.append(player)
-        print(list_players)
+# @dataclass
+# class Match():
+#     player_a: str
+#     player_b: str
 
-        
 
+def pair_of_player():
+    players = player_db.all()
+    for player in players:
+        print(player)
     
+
+
+if __name__ == "__main__":  
+    pair_of_player()          

@@ -7,6 +7,9 @@ from controllers.user_manager import ControllerPlayer
 MAX_PLAYERS_NUMBER = 3
 
 
+data_base = TinyDB('data_base.json', indent=4)
+player_db = data_base.table("player")
+
 @dataclass
 class Player:
     last_name :str
@@ -16,14 +19,11 @@ class Player:
     rank :str
     # score :str
 
-        
-
     def create_player():
         input_player = ControllerPlayer.input_controller_player()
         return input_player
         
     def save_player_in_db():
-        data_players = TinyDB('data_players.json', indent=4)
         player = Player.create_player()
         last_name = player[0]
         first_name = player[1]
@@ -38,7 +38,7 @@ class Player:
             "genre": genre,
             "rank": rank,
         }
-        data_players.insert(serialized_player)
+        player_db.insert(serialized_player)
 
     def create_list_players():
         list_players = []
@@ -47,12 +47,11 @@ class Player:
             list_players.append(player)
             return list_players
 
+#     def generate_pair():
+#         pass
 
+def get_all_players():
+    return player_db.all()
 
-
-    # def generate_pair():
-    #     list_pair_player = Player.create_list_players()
-    #     list_player_sorted = sorted(list_pair_player)
-    #     print(list_player_sorted)
 
 
