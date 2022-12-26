@@ -1,21 +1,30 @@
-# from dataclasses import dataclass
+from dataclasses import dataclass
 
-from tinydb import TinyDB
-data_base = TinyDB('data_base.json', indent=4)
-player_db = data_base.table("player")
-
-# @dataclass
-# class Match():
-#     player_a: str
-#     player_b: str
+from models.player import Player
 
 
-def pair_of_player():
-    players = player_db.all()
-    for player in players:
-        print(player)
+@dataclass
+class Match():
+    player_a: str
+    player_b: str
+    score_player_a : str
+    score_player_a : str
+
+
+    # def generate_pair_of_players():
+    #     pair_of_players = Player.sort_players_by_rank()
+    #     player_a = pair_of_players[0]
+    #     player_b = pair_of_players[5]
+    #     list_of_pair = []
+    #     list_of_pair.append(player_a)
+    #     list_of_pair.append(player_b)
+    #     print(list_of_pair)
+
+    def generate_pair_of_players():
+        pair_of_players = Player.sort_players_by_rank()
+        return pair_of_players[::5]
+
+
     
 
 
-if __name__ == "__main__":  
-    pair_of_player()          

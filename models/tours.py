@@ -1,5 +1,7 @@
 from dataclasses import dataclass
 
+from models.player import Player
+
 @dataclass
 class Tours:
     nom: str
@@ -10,3 +12,8 @@ class Tours:
 
     def get_date_time():
         pass           
+
+
+    
+
+        

@@ -9,7 +9,6 @@ MAX_PLAYERS_NUMBER = 3
 
 data_base = TinyDB('data_base.json', indent=4)
 player_db = data_base.table("player")
-
 @dataclass
 class Player:
     last_name :str
@@ -47,11 +46,26 @@ class Player:
             list_players.append(player)
             return list_players
 
-#     def generate_pair():
-#         pass
-
-def get_all_players():
-    return player_db.all()
+    def get_all_players():
+        list_player = player_db.all()
+        return list_player
 
 
+    def sort_players_by_rank():
+        list_all_players = Player.get_all_players()
+        players_rank = sorted(list_all_players, key=lambda player: player["rank"])
+        return players_rank
 
+    def players_sorted_alphabetically():
+        list_all_players = Player.get_all_players()
+        players_alphabet = sorted(list_all_players, key=lambda player: player["last_name"])
+        print(players_alphabet)    
+
+    def list_top_of_ranking():
+        top_rank = Player.sort_players_by_rank()
+        return top_rank[:4]
+
+    def list_bottom_of_ranking():
+        bottom_rank = Player.sort_players_by_rank()
+        return bottom_rank[5:9]    
+    
