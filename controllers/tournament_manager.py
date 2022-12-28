@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from controllers.user_manager import check_date
-
+from random import randint
 
 SEPARATOR = "-" * 60
 
@@ -28,9 +28,9 @@ class ControllerTournament:
 
         print(SEPARATOR)
 
-        date_now = input("\nDate \nFormat : jj/mm/aaaa : ")
-        while not check_date(date_now):
-            date_now = input("\nVeuillez saisir un format valide : jj/mm/aaaa : ")
+        date = input("\nDate \nFormat : jj/mm/aaaa : ")
+        while not check_date(date):
+            date = input("\nVeuillez saisir un format valide : jj/mm/aaaa : ")
 
         print(SEPARATOR)
 
@@ -54,11 +54,33 @@ class ControllerTournament:
         note = input("\nAjoutez un commentaire ou appuyez sur entrée: ")
         if len(note) == 0:
             note = "Ancun commentaire"
-        else:
-            return note    
+           
         print(SEPARATOR)
             
         print(f"\nLe tournois {name.upper()} à {place.capitalize()} a été créé.")
-        return name.upper(), place.capitalize(), date_now, time, note
+        return [name.upper(), place.capitalize(), date, time, note]
 
-    
+
+WIN = 2
+LOSS = 1
+
+SKIP_TURN = False
+RESULT_TO_FIND = randint(1, 2)
+
+LAST_NAME = "joan"
+FIRST_NAME = "éric"
+
+@dataclass
+class ControllerRound:
+
+    def random_result(players):
+            print("\nDémarrez le match...")
+            input("\nAppuyez sur Entrée ! ")
+            
+            if RESULT_TO_FIND == WIN:
+                print(f" Le joueur {LAST_NAME} {players} a gagné")
+            elif RESULT_TO_FIND == LOSS:
+                print(f" Le joueur {FIRST_NAME} {players} a perdu")
+            else: 
+                print("fin du jeu")
+            return
