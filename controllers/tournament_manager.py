@@ -1,8 +1,12 @@
 from dataclasses import dataclass
 from controllers.user_manager import check_date
+from models.match import Match
+
 from random import randint
 
 SEPARATOR = "-" * 60
+
+
 
 @dataclass
 class ControllerTournament:
@@ -60,27 +64,65 @@ class ControllerTournament:
         print(f"\nLe tournois {name.upper()} à {place.capitalize()} a été créé.")
         return [name.upper(), place.capitalize(), date, time, note]
 
+MENU_SCORE = """Choisissez parmi les 3 options suivantes:
+0: Perdant
+0,5: Match nul
+1: Gagnant
+Votre choix:  """
 
-WIN = 2
-LOSS = 1
-
-SKIP_TURN = False
-RESULT_TO_FIND = randint(1, 2)
-
-LAST_NAME = "joan"
-FIRST_NAME = "éric"
+RESULT_TO_FIND = randint(0, 2)
 
 @dataclass
 class ControllerRound:
 
-    def random_result(players):
-            print("\nDémarrez le match...")
-            input("\nAppuyez sur Entrée ! ")
-            
-            if RESULT_TO_FIND == WIN:
-                print(f" Le joueur {LAST_NAME} {players} a gagné")
-            elif RESULT_TO_FIND == LOSS:
-                print(f" Le joueur {FIRST_NAME} {players} a perdu")
-            else: 
-                print("fin du jeu")
-            return
+    def random_result(player_a,score_a, player_b, score_b):
+        print("\nDémarrez le match...")
+        print(SEPARATOR)
+
+        winner = 2
+        loser = 1
+        if RESULT_TO_FIND == winner:
+            ControllerRound.print_result_and_score_a(player_a=player_a, player_b=player_b)
+            score_a = ControllerRound.check_score(score_a)
+            print(f"\nEntrez le score de {player_b}: ")
+            score_b = ControllerRound.check_score(score_b)
+            result = Match.list_pair(player_a=player_a, score_a=score_a, player_b=player_b, score_b=score_b)
+            print("fin du match")
+            return result
+        elif RESULT_TO_FIND == loser:
+            ControllerRound.print_result_and_score_b(player_a=player_a, player_b=player_b)
+            score_a = ControllerRound.check_score(score_b)
+            print(f"\nEntrez le score de {player_a}: ")
+            score_b = ControllerRound.check_score(score_a)
+            result = Match.list_pair(player_a=player_a, score_a=score_a, player_b=player_b, score_b=score_b)
+            print("fin du match")
+            return result
+        else:
+            ControllerRound.print_result_and_score_nul(player_a=player_a, player_b=player_b)
+            score_a = ControllerRound.check_score(score_a)
+            print(f"\nEntrez le score de {player_b}: ")
+            score_b = ControllerRound.check_score(score_b)
+            result = Match.list_pair(player_a=player_a, score_a=score_a, player_b=player_b, score_b=score_b)
+            print("fin du match")
+            return result
+
+    def check_score(score):
+        print("\n")
+        score = input(MENU_SCORE)
+        while score not in ["0","0,5","1"]:
+            score = input("\nVous n'avez pas saisi une valeur valide:  ")
+            continue
+        return score
+
+
+    def print_result_and_score_a(player_a, player_b):
+        print(f" Le joueur {player_a} a gagné \n Le joueur {player_b} a perdu")
+        print(f"\nEntrez le score de {player_a}: ")
+
+    def print_result_and_score_b(player_a, player_b):
+        print(f" Le joueur {player_b} a gagné \n Le joueur {player_a} a perdu")
+        print(f"\nEntrez le score de {player_b}: ")
+
+    def print_result_and_score_nul(player_a, player_b):
+        print(f" Les joueurs {player_a} et {player_b} ont fait match nul")
+        print(f"\nEntrez le score de {player_a}: ")    
