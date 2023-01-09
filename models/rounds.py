@@ -1,5 +1,5 @@
-from tinydb import TinyDB
-from tinydb.operations import add
+from tinydb import TinyDB, where
+
 from datetime import datetime
 from operator import itemgetter
 
@@ -38,17 +38,18 @@ class Rounds:
         i = 0
         while i < len(lists_of_pair):
             for (player_a, player_b) in lists_of_pair:
-                pair = ControllerRound.generate_match(player_a, player_b)
-                lists_matchs.append(pair)
+                pairs = ControllerRound.generate_match(player_a, player_b)
+                lists_matchs.append(pairs)
                 i += 1
             end = Rounds.date_time_round()
-            print(f"fin du Round le {end[0]} à {end[1]}")
+            print(f"\nfin du Round le {end[0]} à {end[1]}")
         return lists_matchs
 
 
-    def first_round():
-        round_1 = Rounds.make_round(Player.generate_list_pair_round_1())
-        return round_1
+    def first_match():
+        list_match = Rounds.make_round(Player.generate_list_pair_round_1())
+        for match in list_match:
+            return match
 
     def second_round():
         pass
@@ -64,6 +65,8 @@ class Rounds:
         start = Rounds.date_time_round()
         name = Rounds.create_round()
         list_matchs = Rounds.make_round(Player.generate_list_pair_round_1())
+    
+
         end = Rounds.date_time_round()
 
         serialized_round = {
@@ -71,31 +74,33 @@ class Rounds:
             "start": start,
             "end": end,
             "list_matchs": list_matchs,
+            
         }
         Rounds.rounds_db.insert(serialized_round)
-        Player.player_db.update(add("score", ControllerRound.check_score()))
+        # Player.player_db.update({"score": })
+
+       
+
+        
 
 
     def list_matchs_in_db():
         list_players = Rounds.rounds_db.all()
         for players in list_players:
-            for player in players["list_matchs"]:
-                sort_player = sorted(player[1::2], reverse=True)
-                print(sort_player) 
+            return players["list_matchs"]
+                
 
     # def list_matchs_in_db():
     #     list_players = Rounds.rounds_db.all()
     #     for players in list_players:
     #         sort_player = sorted(players["list_matchs"])
-    #         print(sort_player)
+    #         return sort_player
                 
-    
-    
-    
     def sort_players_by_points():
         list_matchs_db = Rounds.list_matchs_in_db()
         for match_player in list_matchs_db:
-            player = sorted(match_player["list_matchs"], key=itemgetter(1,2))
+            print(match_player)
+            player = sorted(match_player)
             print(player)
 
           

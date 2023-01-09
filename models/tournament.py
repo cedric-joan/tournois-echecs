@@ -3,13 +3,12 @@ from tinydb import TinyDB
 from dataclasses import dataclass
 
 from controllers.tournament_manager import ControllerTournament
+from models.rounds import Rounds
 
 
 SEPARATOR = "-" * 60
 ROUND_DEFAULT = 4
 
-data_base = TinyDB('data_base.json', indent=4)
-tournament_db = data_base.table("tournament")
 
 @dataclass
 class Tournament:
@@ -18,6 +17,7 @@ class Tournament:
     date: str
     time: str
     note: str
+    data_base = TinyDB('data_base.json', indent=4)
 
     def create_tournament():
         tournament = ControllerTournament.input_controller_tournament()
@@ -30,6 +30,7 @@ class Tournament:
         date = tournament[2]
         time = tournament[3]
         note = tournament[4]
+        list_rounds = Rounds.save_round()
 
         serialized_tournament = {
             "name": name,
@@ -37,11 +38,12 @@ class Tournament:
             "date": date,
             "time": time,
             "note": note,
+            "list_rounds": list_rounds
         }
-        tournament_db.insert(serialized_tournament)
+        Tournament.data_base.insert(serialized_tournament)
         
     def start_tournament():
-        Tournament.save_tournament_in_db()
+        return Tournament.save_tournament_in_db()
 
 
 
