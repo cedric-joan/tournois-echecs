@@ -5,6 +5,7 @@ from operator import itemgetter
 
 from dataclasses import dataclass
 from models.player import Player
+from models.match import Match
 from controllers.tournament_manager import ControllerRound
 
 
@@ -47,47 +48,46 @@ class Rounds:
 
 
     def first_match():
-        list_match = Rounds.make_round(Player.generate_list_pair_round_1())
-        for match in list_match:
-            return match
+        return 
 
     def second_round():
-        pass
+        round_2 = Rounds.make_round(Player.associate_players())
+        Rounds.rounds_db.insert({"list_match_2": round_2})
+        Player.update_score_players()
+
+        return 
 
     def third_round():
         pass
 
     def fourth_round():
-        pass
+        Player.generate_list_pair_round_1()
+
+
 
 # créer une méthode qui regroupe toutes les autres.
     def save_round():
         start = Rounds.date_time_round()
         name = Rounds.create_round()
-        list_matchs = Rounds.make_round(Player.generate_list_pair_round_1())
-    
-
+        round_1 = Rounds.make_round(Player.generate_list_pair_round_1())
         end = Rounds.date_time_round()
 
         serialized_round = {
             "round_name": name,
             "start": start,
             "end": end,
-            "list_matchs": list_matchs,
-            
+            "list_match_1": round_1,
+            # "list_match_2": round,
+            # "list_match_3": round,
+            # "list_match_4": round,
         }
         Rounds.rounds_db.insert(serialized_round)
-        # Player.player_db.update({"score": })
+        Player.update_score_players()
 
-       
-
-        
-
-
-    def list_matchs_in_db():
+    def list_players_by_match():
         list_players = Rounds.rounds_db.all()
         for players in list_players:
-            return players["list_matchs"]
+            return players["list_match_1"]
                 
 
     # def list_matchs_in_db():
