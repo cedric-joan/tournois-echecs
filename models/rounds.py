@@ -1,40 +1,32 @@
 from tinydb import TinyDB, where
-
 from datetime import datetime
-from operator import itemgetter
 
-from dataclasses import dataclass
+from views.views_tournament import ViewsTournament
 from models.player import Player
-from models.match import Match
 from controllers.tournament_manager import ControllerRound
 
-
-@dataclass
 class Rounds:
-    name = str
-    start: str
-    heure_debut: str
-    end: str
-    heure_fin: str
-    list_matchs = []
+    """ Classe servant a créer une instance de tour."""
+    def __init__(self, name="",start="", day="",hour="", end=""):
+        self.name = name
+        self.start = start
+        self.day = day
+        self.end = end
+        self.hour = hour
 
+    list_matchs = []
     data_base = TinyDB('data_base.json', indent=4)
     rounds_db = data_base.table("rounds")
 
     def date_time_round():
+        """ Methode servant a générer une date et une heure."""
         date = datetime.now()
         day = date.strftime("%d %B %Y")
         hour = date.strftime("%HH %Mm %Ss")
         return day,hour  
 
-
-    def create_round():
-        print("\n")
-        print("  Début du tour ")
-        name = input("\n⚜  Ajouter un nom  ⚜ : ")
-        return name
-
-    def make_round(lists_of_pair):
+    def generate_round(lists_of_pair):
+        """ Methode servant a générer un tour."""
         lists_matchs = []
         i = 0
         while i < len(lists_of_pair):
@@ -42,65 +34,61 @@ class Rounds:
                 pairs = ControllerRound.generate_match(player_a, player_b)
                 lists_matchs.append(pairs)
                 i += 1
-            end = Rounds.date_time_round()
-            print(f"\nfin du Round le {end[0]} à {end[1]}")
         return lists_matchs
 
-
     def first_match():
-        return 
+        """ Methode servant a générer le premier tour."""
+        return Rounds.generate_round(Rounds.generate_first_round())
 
-    def second_round():
-        round_2 = Rounds.make_round(Player.associate_players())
-        Rounds.rounds_db.insert({"list_match_2": round_2})
-        Player.update_score_players()
+    def next_round():
+        """ Methode servant a générer les prochains tours."""
+        i = 0
+        while i < 3:
+            next_round = Rounds.generate_round(Rounds.generate_next_round())
+            Rounds.rounds_db.insert({"list_match": next_round})
+            Player.update_score_players()
+            i += 1
 
-        return 
-
-    def third_round():
-        pass
-
-    def fourth_round():
-        Player.generate_list_pair_round_1()
-
-
-
-# créer une méthode qui regroupe toutes les autres.
     def save_round():
+        """ Methode servant à serialiser une instance de tour. """
         start = Rounds.date_time_round()
-        name = Rounds.create_round()
-        round_1 = Rounds.make_round(Player.generate_list_pair_round_1())
+        name = ViewsTournament.create_round()
         end = Rounds.date_time_round()
-
+        round_1 = Rounds.first_match()
         serialized_round = {
             "round_name": name,
             "start": start,
             "end": end,
-            "list_match_1": round_1,
-            # "list_match_2": round,
-            # "list_match_3": round,
-            # "list_match_4": round,
+            "list_match": round_1,
         }
         Rounds.rounds_db.insert(serialized_round)
         Player.update_score_players()
 
     def list_players_by_match():
+        """ Methode servant a générer la liste de joueurs par match."""
+        display_list_players = []
         list_players = Rounds.rounds_db.all()
-        for players in list_players:
-            return players["list_match_1"]
-                
+        for players in list_players[0]["list_match"]:
+            display_list_players.append(players[0][0])
+            display_list_players.append(players[1][0])
+        list_sorted = sorted(display_list_players)   
+        return list_sorted
 
-    # def list_matchs_in_db():
-    #     list_players = Rounds.rounds_db.all()
-    #     for players in list_players:
-    #         sort_player = sorted(players["list_matchs"])
-    #         return sort_player
-                
-    def sort_players_by_points():
-        list_matchs_db = Rounds.list_matchs_in_db()
-        for match_player in list_matchs_db:
-            print(match_player)
-            player = sorted(match_player)
-            print(player)
+    def generate_first_round():
+        """ Methode servant a générer une liste de paire de joueurs."""
+        players = Player.player_db.all()
+        return [players[::4], players[1::4], players[2::4], players[3::4]]   
 
-          
+    def generate_next_round():
+        """ Methode servant a générer le prochain tour."""
+        list_players = Rounds.rounds_db.all()
+        i = 0
+        for matches in list_players:
+            matches = matches["list_match"]
+            if matches[i] != matches[i]:
+                Player.associate_players()
+                i += 1
+            else:
+                Player.sort_players_score()
+
+            
