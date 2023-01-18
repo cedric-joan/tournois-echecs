@@ -1,9 +1,7 @@
-from dataclasses import dataclass
-
-
 SEPARATOR = "-" * 60
 
 def  check_date(date):
+        """ Methode servant a vérifier la date."""
         if len(date) != 10:
             return False
         elif date.count("/") != 2:
@@ -16,23 +14,21 @@ def  check_date(date):
             return False
         return True
 
+def check_name(name):    
+    while not name.isalpha() or len(name) < 3:
+        name = input("Saisie invalide: ")
+        continue
+    return name
 
-@dataclass
 class ControllerPlayer:
 
-    def check_last_name():    
+    def check_last_name():            
         last_name = input("\nNom : ")
-        while not last_name.isalpha() or len(last_name) < 3:
-            last_name = input("Nom invalide: ")
-            continue
-        return last_name
+        return check_name(last_name)    
 
     def check_first_name():            
         first_name = input("\nPrenom : ")
-        while not first_name.isalpha() or len(first_name) < 3:
-            first_name = input("Prénom invalide: ")
-            continue
-        return first_name
+        return check_name(first_name)
 
     def check_birthday():        
         birthday = input("\nDate de naissance\nFormat : jj/mm/aaaa : ")
@@ -49,13 +45,14 @@ class ControllerPlayer:
         return genre
 
     def check_rank():        
-        rank = input("\nClassement : ")
+        rank = input("\nVeuillez saisir le numéro du classement : ")
         while not rank.isdigit() or len(rank) < 1:
             rank = input("Veuillez saisir un chiffre")
             continue
         return rank
 
     def input_controller_player():
+        """ Methode servant a récupérer les saisies utilisteur."""
         print("\n")
         print(SEPARATOR)
         print("⚜  Ajouter un joueur  ⚜")
@@ -68,10 +65,9 @@ class ControllerPlayer:
         print(SEPARATOR)
         genre = ControllerPlayer.check_genre()
         print(SEPARATOR)
-        rank = ControllerPlayer.check_rank()
+        rank = "0"
         print(SEPARATOR)
+        score = 0.0
         print(f"Le joueur {last_name.upper()} {first_name.capitalize()} a été créé")
-        return [last_name.upper(), first_name.capitalize(), birthday, genre, rank]
-
-
-                
+        print("\n")
+        return [last_name.upper(), first_name.capitalize(), birthday, genre, rank, score] 
