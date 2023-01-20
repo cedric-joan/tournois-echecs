@@ -1,12 +1,20 @@
 from tinydb import TinyDB
 
-from controllers.tournament_manager import ControllerTournament
-
 SEPARATOR = "-" * 60
 
 class Tournament:
+
+    data_base = TinyDB('data_base.json', indent=4)
+    tournament_db = data_base.table("tournament")
     """ Classe servant a créer une instance de tournoi."""
-    def __init__(self, name,place, date, time, note, rounds):
+    def __init__(self, 
+                name="", 
+                place="", 
+                date="", 
+                time="", 
+                note="", 
+                rounds=4
+                ):
         self.name = name
         self.place = place
         self.date = date
@@ -14,32 +22,16 @@ class Tournament:
         self.note = note
         self.rounds = rounds
     
-    data_base = TinyDB('data_base.json', indent=4)
-    tournament_db = data_base.table("tournament")
-
-    def start_tournament():
+    def save_tournament(self):
         """ Methode servant à serialiser une instance de tournoi. """
-        tournament = ControllerTournament.input_controller_tournament()
-        name = tournament[0]
-        place = tournament[1]
-        date = tournament[2]
-        time = tournament[3]
-        note = tournament[4]
-        rounds = 4
         serialized_tournament = {
-            "name": name,
-            "place": place,
-            "date": date,
-            "time": time,
-            "note": note,
-            "rounds": rounds,
+            "name": self.name,
+            "place": self.place,
+            "date": self.date,
+            "time": self.time,
+            "note": self.note,
+            "rounds": self.rounds,
         }
         Tournament.tournament_db.insert(serialized_tournament)
-        
-    
 
 
-    
-
-        
-        

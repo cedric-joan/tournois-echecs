@@ -1,11 +1,14 @@
-from tinydb import TinyDB, where
+from tinydb import TinyDB
 from datetime import datetime
 
-from views.views_tournament import ViewsTournament
+from views.views_tournament import InputTournament
 from models.player import Player
 from controllers.tournament_manager import ControllerRound
 
 class Rounds:
+    
+    data_base = TinyDB('data_base.json', indent=4)
+    rounds_db = data_base.table("rounds")
     """ Classe servant a créer une instance de tour."""
     def __init__(self, name="",start="", day="",hour="", end=""):
         self.name = name
@@ -15,8 +18,6 @@ class Rounds:
         self.hour = hour
 
     list_matchs = []
-    data_base = TinyDB('data_base.json', indent=4)
-    rounds_db = data_base.table("rounds")
 
     def date_time_round():
         """ Methode servant a générer une date et une heure."""
@@ -44,7 +45,7 @@ class Rounds:
         """ Methode servant a générer les prochains tours."""
         i = 0
         while i < 3:
-            next_round = Rounds.generate_round(Rounds.generate_next_round())
+            next_round = Rounds.generate_round(Player.associate_players())
             Rounds.rounds_db.insert({"list_match": next_round})
             Player.update_score_players()
             i += 1
@@ -52,7 +53,7 @@ class Rounds:
     def save_round():
         """ Methode servant à serialiser une instance de tour. """
         start = Rounds.date_time_round()
-        name = ViewsTournament.create_round()
+        name = InputTournament.create_round()
         end = Rounds.date_time_round()
         round_1 = Rounds.first_match()
         serialized_round = {
