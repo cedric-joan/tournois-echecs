@@ -1,11 +1,15 @@
-from views.views_players import ViewsPlayers
-from views.views_tournament import ViewsTournament
+from views.views_players import ViewsPlayers, MenuPlayer
+from views.views_tournament import InputTournament
 from models.tournament import Tournament
 from models.rounds import Rounds
+from controllers.user_manager import UserManager
 
 SEPARATOR = "-" * 60
 
 class ViewsMainMenu:
+    def __init__(self, views) -> None:
+        self.views = views
+
 
     def main():
         """ Methode servant a afficher le menu principal."""
@@ -13,16 +17,19 @@ class ViewsMainMenu:
         print("-" * 30)
         print("Menu principal: ")
         print("-" * 30)
+        views_tournament = InputTournament()
+        views_players = MenuPlayer()
         user_choice = ""
         while user_choice not in ["1","2","3","4"] or user_choice == " ":
             user_choice = input("\n1 - Créer un nouveau tournoi\n2 - Menu joueurs\n3 - Menu tournois\n4 - Quitter\nVotre choix: ")
             if user_choice == "1":
-                ViewsTournament.start_tournament()
-                Tournament.start_tournament()
+                views_tournament.start_tournament()
+                views_tournament.display_start_tournament()
+                UserManager.create_list_players()
                 Rounds.save_round()
-                Rounds.generate_next_round()
+                Rounds.next_round()
             elif user_choice == "2":
-                user_choice = ViewsPlayers.display_players_menu()
+                user_choice = views_players.display_players_menu()
             elif user_choice == "3":
                 user_choice = ViewsTournaments.display_tournament_menu()
             elif user_choice == "4":
