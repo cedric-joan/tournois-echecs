@@ -48,8 +48,8 @@ python main.py
 
 ## Code Quality
 
-Flake8-html is used to keep the code clean.
-La configuration setrouve dans le fichier `.flake8` 
+Flake8 est utilisé pour la mise en forme et le nettoyage du code.
+La configuration se trouve dans le fichier `.flake8` 
 Pour démarrer, executer:
 ```
 flake8_report_generator.py
