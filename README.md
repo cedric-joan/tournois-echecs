@@ -39,10 +39,6 @@ Lancer :
 pip install -r requirements.txt
 ```
 
-## Setup
-
-Rien à signaler
-
 ## Use
 Lancer le script :
 
@@ -52,11 +48,10 @@ python main.py
 
 ## Code Quality
 
-Flake8 is used to keep the code clean.
+Flake8-html is used to keep the code clean.
 The configuration can be found in the `.flake8` file
 To run, execute:
 ```
-flake8
+flake8_report_generator.py
 ```
 
-https://flake8.pycqa.org/en/latest/
